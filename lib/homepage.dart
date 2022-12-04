@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:math_expressions/math_expressions.dart';
+import 'package:function_tree/function_tree.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -8,7 +10,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  var resultText = "";
+  var expressionText = "";
+  var expressionResult = "";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,61 +25,90 @@ class _HomePageState extends State<HomePage> {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Text(
-                  resultText,
-                  style: TextStyle(fontSize: 30),
+                Expanded(
+                  child: Text(
+                    overflow: TextOverflow.fade,
+                    expressionResult,
+                    textAlign: TextAlign.right,
+                    style: const TextStyle(fontSize: 65),
+                  ),
+                )
+              ],
+            ),
+            const Divider(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Expanded(
+                  child: Text(
+                    expressionText,
+                    textAlign: TextAlign.right,
+                    style: const TextStyle(fontSize: 50, color: Colors.grey),
+                  ),
                 ),
               ],
             ),
-            const SizedBox(height: 30),
+            const Divider(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                numButton('C'),
-                numButton('+/-'),
-                numButton('%'),
-                numButton('/')
+                numButton('C', Colors.amber, Colors.white),
+                numButton('+/-', Colors.amber, Colors.white),
+                numButton('%', Colors.amber, Colors.white),
+                numButton('/', Colors.amber, Colors.white)
               ],
             ),
             const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                numButton('7'),
-                numButton('8'),
-                numButton('9'),
-                numButton('x')
+                numButton('7', Colors.amber, Colors.white),
+                numButton('8', Colors.amber, Colors.white),
+                numButton('9', Colors.amber, Colors.white),
+                numButton('x', Colors.amber, Colors.white)
               ],
             ),
             const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                numButton('4'),
-                numButton('5'),
-                numButton('6'),
-                numButton('-')
+                numButton('4', Colors.amber, Colors.white),
+                numButton('5', Colors.amber, Colors.white),
+                numButton('6', Colors.amber, Colors.white),
+                numButton('-', Colors.amber, Colors.white)
               ],
             ),
             const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                numButton('1'),
-                numButton('2'),
-                numButton('3'),
-                numButton('+')
+                numButton('1', Colors.amber, Colors.white),
+                numButton('2', Colors.amber, Colors.white),
+                numButton('3', Colors.amber, Colors.white),
+                numButton('+', Colors.amber, Colors.white)
               ],
             ),
             const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                numZeroButton('0'),
-                numButton('.'),
-                numButton('='),
+                Expanded(
+                  flex: 2,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: numZeroButton('0', Colors.pink, Colors.white),
+                  ),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: numButton('.', Colors.amber, Colors.white),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: numButton('=', Colors.amber, Colors.white),
+                ),
               ],
             )
           ],
@@ -85,34 +117,34 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget numButton(String text) {
+  Widget numButton(String text, Color backgroundColor, Color textColor) {
     return ElevatedButton(
       onPressed: () {
         calculate(text);
       },
       child: Text(
         text,
-        style: TextStyle(fontSize: 25, color: Colors.brown),
+        style: TextStyle(fontSize: 30, color: textColor),
       ),
       style: ElevatedButton.styleFrom(
-        fixedSize: Size(70, 70),
-        shape: CircleBorder(),
-        primary: Colors.amber,
+        fixedSize: const Size(80, 70),
+        shape: const CircleBorder(),
+        primary: backgroundColor,
       ),
     );
   }
 
-  Widget numZeroButton(String text) {
+  Widget numZeroButton(String text, Color backgroundColor, Color textColor) {
     return ElevatedButton(
       onPressed: () {
         calculate(text);
       },
       child: Text(
         text,
-        style: TextStyle(fontSize: 25, color: Colors.brown),
+        style: TextStyle(fontSize: 30, color: textColor),
       ),
       style: ElevatedButton.styleFrom(
-        fixedSize: Size(70, 70),
+        fixedSize: const Size(120, 70),
         shape: const StadiumBorder(),
         primary: Colors.amber,
       ),
@@ -122,8 +154,9 @@ class _HomePageState extends State<HomePage> {
   void calculate(String buttonText) {
     var tempText = "";
     var resultTextLastChar = "";
-    if (resultText.isNotEmpty) {
-      resultTextLastChar = resultText.characters.last;
+    var expressionResultTemp = "";
+    if (expressionText.isNotEmpty) {
+      resultTextLastChar = expressionText.characters.last;
     }
 
     if (buttonText == "/" ||
@@ -139,23 +172,46 @@ class _HomePageState extends State<HomePage> {
           resultTextLastChar == "x" ||
           resultTextLastChar == "%") {
         //supress user from pressing operator after another operator
-        tempText = resultText;
+        tempText = expressionText;
       } else {
-        tempText = resultText + buttonText;
+        tempText = expressionText + buttonText;
       }
     } else if (buttonText == "C") {
       tempText = "";
+    } else if (buttonText == "=") {
+      tempText = expressionText;
     } else {
-      tempText = resultText + buttonText;
+      tempText = expressionText + buttonText;
     }
 
     if (buttonText == "=") {
       //calculate result
 
+      //Parser p = Parser();
+      //Expression exp = p.parse("1+1-6");
+      //expressionResultTemp = exp.simplify().toString();
+      var newExpression = expressionText.replaceAll("x", "*");
+      if (resultTextLastChar == '.' ||
+          resultTextLastChar == "/" ||
+          resultTextLastChar == "+" ||
+          resultTextLastChar == "-" ||
+          resultTextLastChar == "x" ||
+          resultTextLastChar == "%") {
+        //do nothing if last char is operator and result is asked
+      } else if (expressionText.isEmpty) {
+        //do nothing if expresion is empty
+      } else {
+        expressionResultTemp = newExpression.interpret().toString();
+      }
     }
 
     setState(() {
-      resultText = tempText;
+      expressionText = tempText;
+      if (expressionResultTemp == "NaN") {
+        expressionResult = "Bsdk Sahi se Number dal!!";
+      } else {
+        expressionResult = expressionResultTemp;
+      }
     });
   }
 }
