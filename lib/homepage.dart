@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:math_expressions/math_expressions.dart';
 import 'package:function_tree/function_tree.dart';
 
 class HomePage extends StatefulWidget {
@@ -15,6 +14,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.amber[50]!,
       appBar: AppBar(
         title: const Text('My Calculator'),
         backgroundColor: Colors.black,
@@ -54,40 +54,40 @@ class _HomePageState extends State<HomePage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                numButton('C', Colors.amber, Colors.white),
-                numButton('+/-', Colors.amber, Colors.white),
-                numButton('%', Colors.amber, Colors.white),
-                numButton('/', Colors.amber, Colors.white)
+                numButton('C', Colors.orange[200]!, Colors.white),
+                numButton('+/-', Colors.amber[300]!, Colors.white),
+                numButton('%', Colors.amber[300]!, Colors.white),
+                numButton('/', Colors.amber[300]!, Colors.white)
               ],
             ),
             const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                numButton('7', Colors.amber, Colors.white),
-                numButton('8', Colors.amber, Colors.white),
-                numButton('9', Colors.amber, Colors.white),
-                numButton('x', Colors.amber, Colors.white)
+                numButton('7', Colors.amber[300]!, Colors.white),
+                numButton('8', Colors.amber[300]!, Colors.white),
+                numButton('9', Colors.amber[300]!, Colors.white),
+                numButton('x', Colors.amber[300]!, Colors.white)
               ],
             ),
             const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                numButton('4', Colors.amber, Colors.white),
-                numButton('5', Colors.amber, Colors.white),
-                numButton('6', Colors.amber, Colors.white),
-                numButton('-', Colors.amber, Colors.white)
+                numButton('4', Colors.amber[300]!, Colors.white),
+                numButton('5', Colors.amber[300]!, Colors.white),
+                numButton('6', Colors.amber[300]!, Colors.white),
+                numButton('-', Colors.amber[300]!, Colors.white)
               ],
             ),
             const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                numButton('1', Colors.amber, Colors.white),
-                numButton('2', Colors.amber, Colors.white),
-                numButton('3', Colors.amber, Colors.white),
-                numButton('+', Colors.amber, Colors.white)
+                numButton('1', Colors.amber[300]!, Colors.white),
+                numButton('2', Colors.amber[300]!, Colors.white),
+                numButton('3', Colors.amber[300]!, Colors.white),
+                numButton('+', Colors.amber[300]!, Colors.white)
               ],
             ),
             const SizedBox(height: 10),
@@ -98,16 +98,16 @@ class _HomePageState extends State<HomePage> {
                   flex: 2,
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: numZeroButton('0', Colors.pink, Colors.white),
+                    child: numZeroButton('0', Colors.amber[300]!, Colors.white),
                   ),
                 ),
                 Expanded(
                   flex: 1,
-                  child: numButton('.', Colors.amber, Colors.white),
+                  child: numButton('.', Colors.amber[300]!, Colors.white),
                 ),
                 Expanded(
                   flex: 1,
-                  child: numButton('=', Colors.amber, Colors.white),
+                  child: numButton('=', Colors.amber[300]!, Colors.white),
                 ),
               ],
             )
@@ -146,7 +146,7 @@ class _HomePageState extends State<HomePage> {
       style: ElevatedButton.styleFrom(
         fixedSize: const Size(120, 70),
         shape: const StadiumBorder(),
-        primary: Colors.amber,
+        primary: backgroundColor,
       ),
     );
   }
@@ -185,11 +185,6 @@ class _HomePageState extends State<HomePage> {
     }
 
     if (buttonText == "=") {
-      //calculate result
-
-      //Parser p = Parser();
-      //Expression exp = p.parse("1+1-6");
-      //expressionResultTemp = exp.simplify().toString();
       var newExpression = expressionText.replaceAll("x", "*");
       if (resultTextLastChar == '.' ||
           resultTextLastChar == "/" ||
